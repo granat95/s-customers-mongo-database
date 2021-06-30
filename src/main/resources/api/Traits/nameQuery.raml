@@ -1,0 +1,9 @@
+#%RAML 1.0 Trait
+description: Szukanie klientów po ich imieniu
+queryParameters:
+  name:
+    type: string
+    required: false
+    example: Paweł
+    minLength: 2
+    maxLength: 10
