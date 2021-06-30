@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:mongo="http://www.mulesoft.org/schema/mule/mongo"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/mongo http://www.mulesoft.org/schema/mule/mongo/current/mule-mongo.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="getCustomers" doc:id="7d5cd83e-6649-4794-a45d-77e3963b1338" >
+		<logger level="INFO" doc:name="Logger" doc:id="eadb0ef1-ac25-4700-817f-d0ced3e8aba3" message="get method"/>
+		<choice doc:name="Choice" doc:id="aa9cf0b2-8e9d-4153-9dd3-aa4ff0733c29" >
+			<when expression="#[not isEmpty(attributes.queryParams.company)]">
+				<mongo:find-documents doc:name="query company" doc:id="df38add9-acd0-41a5-9176-916c79e7465e" config-ref="MongoDB_Config" collectionName="customers" fields="id,name,surname,company">
+					<mongo:query ><![CDATA[#[output application/json
+---
+{
+	"company": attributes.queryParams.company
+}]]]></mongo:query>
+				</mongo:find-documents>
+			</when>
+			<when expression="#[not isEmpty(attributes.queryParams.name)]">
+				<mongo:find-documents doc:name="Find documents" doc:id="6691e5ca-92ed-426a-9d83-6060e24caf7e" config-ref="MongoDB_Config" collectionName="customers" fields="id,name,surname,company">
+					<mongo:query ><![CDATA[#[output application/json
+---
+{
+	"company": attributes.queryParams.name
+}]]]></mongo:query>
+				</mongo:find-documents>
+			</when>
+			<otherwise >
+				<mongo:find-documents doc:name="all customers" doc:id="b26b5d00-187e-4da6-bb55-08b840dc3d62" config-ref="MongoDB_Config" collectionName="customers" fields="id,name,surname,company">
+		</mongo:find-documents>
+			</otherwise>
+		</choice>
+		<logger level="INFO" doc:name="data to json" doc:id="c8129763-899e-4386-8642-74ed49757a89" message="data to json"/>
+		<ee:transform doc:name="Transform Message" doc:id="3b0b8d94-f28d-4225-8829-6597aa9c987f" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="postCustomers" doc:id="dcfe5167-c1f6-4c87-865e-aea0feffdb04" >
+		<logger level="INFO" doc:name="Logger" doc:id="09290d77-c143-4a60-9bca-6e951e4c6fdb" message="post method" />
+		<mongo:insert-document collectionName="customers" doc:name="Insert document" doc:id="1258fe03-85c4-4a4c-95fd-846797417901" config-ref="MongoDB_Config">
+		</mongo:insert-document>
+		<logger level="INFO" doc:name="Logger" doc:id="64f1649e-ba4d-49de-a86d-bbce7152b175" message="Dodano klienta"/>
+		<ee:transform doc:name="Transform Message" doc:id="c06218f5-de88-47de-bebd-c3a023721f8e" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+"message": "Dodano klienta"]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="deleteCustomers" doc:id="137a1844-0edb-4ae9-8c60-405bc9f29b15" >
+		<logger level="INFO" doc:name="Logger" doc:id="659b15dd-4501-4e46-badb-9a6801f48ba8" message="delete method"/>
+		<mongo:remove-documents doc:name="Remove documents" doc:id="475e6f93-4fc4-42f5-8698-5efccca9f30f" config-ref="MongoDB_Config" collectionName="customers">
+			<mongo:query ><![CDATA[#[output application/json
+---
+{
+	'id': attributes.uriParams.ID as Number
+}]]]></mongo:query>
+		</mongo:remove-documents>
+		<logger level="INFO" doc:name="Logger" doc:id="639e517b-85c9-4d29-b192-decf9fe649aa" message="Usunięto klienta"/>
+		<ee:transform doc:name="Transform Message" doc:id="e9e7614f-2472-443a-8f9a-d1be09004835" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+"message": "Usunięto klienta"]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

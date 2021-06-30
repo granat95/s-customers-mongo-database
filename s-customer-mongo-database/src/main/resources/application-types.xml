@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="customersExample" format="json">
+      <types:shape format="weave" example="api/Examples/exampleClient.json"><![CDATA[%dw 2.0
+
+type customersExample = {|
+  id: Number {"typeId": "int"}, 
+  name: String, 
+  surname: String, 
+  company: String, 
+  phoneId: Array<{|    number: Number {"typeId": "int"},     kind: String  |}>, 
+  addressId: Array<{|    city: String,     postalCode: String,     street: String,     houseNo: Number {"typeId": "int"},     "apartmentNo?": Number {"typeId": "int"}  |}>
+|} {"example": "{\\\"id\\\":230120,\\\"name\\\":\\\"Pawe\u0142\\\",\\\"surname\\\":\\\"Gamrat\\\",\\\"company\\\":\\\"Google\\\",\\\"phoneId\\\":[{\\\"number\\\":341423153,\\\"kind\\\":\\\"Mobilny\\\"},{\\\"number\\\":214262423,\\\"kind\\\":\\\"Stacjonarny\\\"}],\\\"addressId\\\":[{\\\"city\\\":\\\"Olsztyn\\\",\\\"postalCode\\\":\\\"10-100\\\",\\\"street\\\":\\\"Polowa\\\",\\\"houseNo\\\":3,\\\"apartmentNo?\\\":5},{\\\"city\\\":\\\"Warszawa\\\",\\\"postalCode\\\":\\\"60-400\\\",\\\"street\\\":\\\"Stawigudzka\\\",\\\"houseNo\\\":83,\\\"apartmentNo?\\\":29}]}"}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="uriParams" format="java">
+      <types:shape format="raml"><![CDATA[#%RAML 1.0 DataType
+type: string]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#3b0b8d94-f28d-4225-8829-6597aa9c987f">
+    <types:processor-declaration>
+      <types:output-event>
+        <types:message>
+          <types:payload type="customersExample"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+</types:mule>
