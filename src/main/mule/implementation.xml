@@ -31,7 +31,7 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 		</mongo:find-documents>
 			</otherwise>
 		</choice>
-		<logger level="INFO" doc:name="data to json" doc:id="c8129763-899e-4386-8642-74ed49757a89" message="data to json"/>
+		<logger level="INFO" doc:name="data to json" doc:id="c8129763-899e-4386-8642-74ed49757a89" message="data to jsonn"/>
 		<ee:transform doc:name="Transform Message" doc:id="3b0b8d94-f28d-4225-8829-6597aa9c987f" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
