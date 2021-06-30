@@ -22,7 +22,7 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 					<mongo:query ><![CDATA[#[output application/json
 ---
 {
-	"company": attributes.queryParams.name
+	"name": attributes.queryParams.name
 }]]]></mongo:query>
 				</mongo:find-documents>
 			</when>
