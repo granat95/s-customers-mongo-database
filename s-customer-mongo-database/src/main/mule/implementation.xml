@@ -18,7 +18,7 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 				</mongo:find-documents>
 			</when>
 			<when expression="#[not isEmpty(attributes.queryParams.name)]">
-				<mongo:find-documents doc:name="Find documents" doc:id="6691e5ca-92ed-426a-9d83-6060e24caf7e" config-ref="MongoDB_Config" collectionName="customers" fields="id,name,surname,company">
+				<mongo:find-documents doc:name="query name" doc:id="6691e5ca-92ed-426a-9d83-6060e24caf7e" config-ref="MongoDB_Config" collectionName="customers" fields="id,name,surname,company">
 					<mongo:query ><![CDATA[#[output application/json
 ---
 {
